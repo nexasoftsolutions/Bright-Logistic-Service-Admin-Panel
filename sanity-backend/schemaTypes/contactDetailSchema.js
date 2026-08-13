@@ -14,7 +14,7 @@ export const contactDetailSchema = defineType({
         defineField({
             name: "director_contact_number",
             title: "Director Contact Number",
-            type: "number",
+            type: "string",
             validation: (rule) => rule.required().error("Director number is required")
         }),
         defineField({
