@@ -1,39 +1,110 @@
-import { ContactRound, MapPin, Phone, MessageSquare, User, BadgeCheck, Save, Smartphone } from 'lucide-react';
-import { useState } from 'react';
+import { ContactRound, MapPin, Phone, MessageSquare, User, BadgeCheck, Save, Smartphone, Pencil } from 'lucide-react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { client } from '../sanityClient';
+import { toast } from 'react-toastify';
 
 const ContactDetail = () => {
 
-  // Form State initialized with your design values
-  const [formData, setFormData] = useState({
-    hqLocation: 'Karachi, Pakistan',
-    mainOfficeNumber: '0300-0641482',
-    whatsappNumber: '0300-0641482',
-    directorName: 'Ibrar Khan',
-    directorNumber: '0300-0641481',
+  const [adminId, setAdminId] = useState("")
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const {
+    register,
+    reset,
+    watch,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      headquater_location: '',
+      main_office_number: '',
+      whatsapp_number: '',
+      director_name: '',
+      director_contact_number: '',
+    },
+    mode: 'onBlur',
   });
 
-  const [savedData, setSavedData] = useState({ ...formData });
+  const [watchHeadquaterLocation, watchMainOfficeNumber, watchWhatsappNumber, watchDirectorName, watchDirectorContactNumber] = watch(["headquater_location", "main_office_number", "whatsapp_number", "director_name", "director_contact_number"])
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
+  const { data: fetchAdminContactDetail = [] } = useQuery({
+    queryKey: ['contact_detail'],
+    queryFn: async () => {
+      const response = await client.fetch(`*[_type == "contact_detail"]`);
+      return response;
+    },
+    staleTime: 0,
+  });
+
+  useEffect(() => {
+    if (fetchAdminContactDetail[0]) {
+      setAdminId(fetchAdminContactDetail[0]?._id)
+      reset({
+        headquater_location: fetchAdminContactDetail[0].headquater_location || '',
+        main_office_number: fetchAdminContactDetail[0].main_office_number || '',
+        whatsapp_number: fetchAdminContactDetail[0].whatsapp_number || '',
+        director_name: fetchAdminContactDetail[0].director_name || '',
+        director_contact_number: fetchAdminContactDetail[0].director_contact_number || '',
+      });
+    }
+  }, [fetchAdminContactDetail, reset]);
+
+  const handleEdit = () => {
+    setIsEditMode(true);
+    reset({
+      headquater_location: '',
+      main_office_number: '',
+      whatsapp_number: '',
+      director_name: '',
+      director_contact_number: '',
+    });
   };
 
-  console.log(savedData);
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    setSavedData({ ...formData });
-    alert('Contact details updated successfully!');
+  const handleSave = () => {
+    try {
+      setIsEditMode(false);
+      const data = {
+        _type: 'contact_detail',
+        headquater_location: watchHeadquaterLocation,
+        main_office_number: watchMainOfficeNumber,
+        whatsapp_number: watchWhatsappNumber,
+        director_name: watchDirectorName,
+        director_contact_number: watchDirectorContactNumber
+      }
+      updateAdminDetail.mutate(data)
+      reset({
+        headquater_location: '',
+        main_office_number: '',
+        whatsapp_number: '',
+        director_name: '',
+        director_contact_number: ''
+      });
+    } catch (error) {
+      toast.error('Failed to update contact details');
+    }
   };
+
+  const updateAdminDetail = useMutation({
+    mutationFn: async (data) => {
+      console.log(data);
+      await client.patch(adminId)
+        .set(data)
+        .commit();
+    },
+    onSuccess: () => {
+      toast.success('Contact details updated successfully');
+      setIsEditMode(false);
+    },
+    onError: (error) => {
+      toast.error('Failed to update contact details');
+    }
+  })
 
   return (
     <main className="flex-1 bg-[#f8f9ff] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="flex flex-col w-full gap-8 lg:gap-12 max-w-300 mx-auto">
-        {/* Header Title Section */}
         <div className="flex flex-col gap-2 mb-2">
           <h1 className="text-3xl sm:text-4xl font-bold text-[#000613] tracking-tight">
             Contact Details
@@ -44,10 +115,8 @@ const ContactDetail = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Form Section */}
           <div className="lg:col-span-8 bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,31,63,0.05)] rounded-2xl overflow-hidden relative">
             <div className="p-6 sm:p-8">
-              {/* Form Header */}
               <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
                 <div className="w-12 h-12 bg-[#e8f0fe] rounded-full flex items-center justify-center text-[#0b57d0] shrink-0">
                   <ContactRound size={24} />
@@ -62,12 +131,11 @@ const ContactDetail = () => {
                 </div>
               </div>
 
-              {/* Form Fields */}
-              <form onSubmit={handleSave} className="space-y-6">
+              <form onSubmit={handleSubmit(handleSave)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <label
-                      htmlFor="hqLocation"
+                      htmlFor="headquater_location"
                       className="text-[#43474e] uppercase text-[11px] font-bold tracking-wider"
                     >
                       Headquarters Location
@@ -78,18 +146,27 @@ const ContactDetail = () => {
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5c606a]"
                       />
                       <input
-                        id="hqLocation"
+                        {...register('headquater_location', {
+                          required: 'Headquater location is required',
+                        })}
+                        id="headquater_location"
                         type="text"
-                        value={formData.hqLocation}
-                        onChange={handleChange}
+                        readOnly={!isEditMode}
+                        required
+                        placeholder="e.g., 123 Main St, City, Country"
                         className="w-full bg-[#e8f0fe] text-[#000613] text-sm font-sans pl-10 pr-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-[#904d00]/30 transition-all border-none placeholder-[#74777f]"
                       />
                     </div>
+                    {errors.headquater_location && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.headquater_location.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-2">
                     <label
-                      htmlFor="mainOfficeNumber"
+                      htmlFor="main_office_number"
                       className="text-[#43474e] uppercase text-[11px] font-bold tracking-wider"
                     >
                       Main Office Number
@@ -100,18 +177,27 @@ const ContactDetail = () => {
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5c606a]"
                       />
                       <input
-                        id="mainOfficeNumber"
+                        {...register('main_office_number', {
+                          required: 'Main office number is required',
+                        })}
+                        id="main_office_number"
                         type="text"
-                        value={formData.mainOfficeNumber}
-                        onChange={handleChange}
+                        required
+                        readOnly={!isEditMode}
+                        placeholder="e.g., +1 234 567 890"
                         className="w-full bg-[#e8f0fe] text-[#000613] text-sm font-sans pl-10 pr-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-[#904d00]/30 transition-all border-none placeholder-[#74777f]"
                       />
                     </div>
+                    {errors.main_office_number && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.main_office_number.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-2">
                     <label
-                      htmlFor="whatsappNumber"
+                      htmlFor="whatsapp_number"
                       className="text-[#43474e] uppercase text-[11px] font-bold tracking-wider"
                     >
                       WhatsApp Support Number
@@ -122,19 +208,27 @@ const ContactDetail = () => {
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5c606a]"
                       />
                       <input
-                        id="whatsappNumber"
+                        {...register('whatsapp_number', {
+                          required: 'WhatsApp number is required',
+                        })}
+                        id="whatsapp_number"
                         type="text"
-                        value={formData.whatsappNumber}
-                        onChange={handleChange}
+                        required
+                        readOnly={!isEditMode}
+                        placeholder="e.g., +1 234 567 890"
                         className="w-full bg-[#e8f0fe] text-[#000613] text-sm font-sans pl-10 pr-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-[#904d00]/30 transition-all border-none placeholder-[#74777f]"
                       />
                     </div>
                   </div>
+                  {errors.whatsapp_number && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.whatsapp_number.message}
+                      </p>
+                    )}
                 </div>
 
                 <div className="h-px bg-slate-100 my-8" />
 
-                {/* Director Section Header */}
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-10 h-10 bg-[#e8f0fe] rounded-full flex items-center justify-center text-[#5c606a] shrink-0">
                     <User size={20} />
@@ -147,7 +241,7 @@ const ContactDetail = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <div className="flex flex-col gap-2">
                     <label
-                      htmlFor="directorName"
+                      htmlFor="director_name"
                       className="text-[#43474e] uppercase text-[11px] font-bold tracking-wider"
                     >
                       Director Name
@@ -158,18 +252,27 @@ const ContactDetail = () => {
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5c606a]"
                       />
                       <input
-                        id="directorName"
+                        {...register('director_name', {
+                          required: 'Director name is required',
+                        })}
+                        id="director_name"
                         type="text"
-                        value={formData.directorName}
-                        onChange={handleChange}
+                        required
+                        readOnly={!isEditMode}
+                        placeholder="e.g., John Doe"
                         className="w-full bg-[#e8f0fe] text-[#000613] text-sm font-sans pl-10 pr-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-[#904d00]/30 transition-all border-none placeholder-[#74777f]"
                       />
                     </div>
+                    {errors.director_name && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.director_name.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-2">
                     <label
-                      htmlFor="directorNumber"
+                      htmlFor="director_contact_number"
                       className="text-[#43474e] uppercase text-[11px] font-bold tracking-wider"
                     >
                       Director Contact Number
@@ -180,20 +283,41 @@ const ContactDetail = () => {
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5c606a]"
                       />
                       <input
-                        id="directorNumber"
+                        {...register('director_contact_number', {
+                          required: 'Director contact number is required',
+                        })}
+                        id="director_contact_number"
                         type="text"
-                        value={formData.directorNumber}
-                        onChange={handleChange}
+                        required
+                        readOnly={!isEditMode}
+                        placeholder="e.g., +1 234 567 890"
                         className="w-full bg-[#e8f0fe] text-[#000613] text-sm font-sans pl-10 pr-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-[#904d00]/30 transition-all border-none placeholder-[#74777f]"
                       />
                     </div>
+                    {errors.director_contact_number && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.director_contact_number.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
-                {/* Form Action Submit */}
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-end gap-3 pt-4">
+                  <button
+                    type="button"
+                    disabled={isEditMode}
+                    onClick={handleEdit}
+                    className="w-full sm:w-auto bg-[#e8f0fe] hover:bg-[#d1e3fc] text-[#000613] font-semibold text-xs uppercase tracking-wider py-4 px-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer"
+                  >
+                    <Pencil
+                      size={18}
+                      className="group-hover:-translate-y-0.5 transition-transform"
+                    />
+                    Edit Contact Details
+                  </button>
                   <button
                     type="submit"
+                    disabled={!isEditMode}
                     className="w-full sm:w-auto bg-[#050f1d] hover:bg-[#0c2444] text-white font-semibold text-xs uppercase tracking-wider py-4 px-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer"
                   >
                     <Save
