@@ -1,10 +1,10 @@
+import { useQuery } from '@tanstack/react-query';
 import { Truck, Package, Building2, FileText, Plus, ArrowRight, Mail, ExternalLink, MapPin, PlusSquare, Edit3 } from 'lucide-react';
 
 const Dashboard = () => {
 
   return (
         <main className="p-4 sm:p-8 lg:p-12 space-y-8 lg:space-y-12">
-          {/* Welcome Banner & System Status */}
           <section className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 relative z-10">
             <div className="space-y-2">
               <span className="text-[#43474e] font-bold text-xs uppercase tracking-widest">

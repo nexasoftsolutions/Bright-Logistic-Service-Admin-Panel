@@ -215,40 +215,40 @@ const Coverage = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-              (fetchCoverageData.length === 0) ? (
+              {fetchCoverageData.length === 0 ? (
                 <div className="col-span-full text-center py-10 text-[#5c606a]">
                   No coverage data available. Please add a new location.
                 </div>
               ) : (
-              {fetchCoverageData.map((item) => (
-                <div
-                  key={item?._id}
-                  className="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,31,63,0.05)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full"
-                >
-                  <div className="p-6 flex flex-col grow justify-between gap-4">
-                    <div className="flex flex-col gap-1">
-                      <h3 className="font-bold text-[#000613] text-lg">
-                        {item?.city_name || "Unknown City"}
-                      </h3>
-                      <p className="text-[#5c606a] text-sm font-medium">
-                        {item?.city_speciality || "Unknown Speciality"}
-                      </p>
+                fetchCoverageData.map((item) => (
+                  <div
+                    key={item?._id}
+                    className="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,31,63,0.05)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full"
+                  >
+                    <div className="p-6 flex flex-col grow justify-between gap-4">
+                      <div className="flex flex-col gap-1">
+                        <h3 className="font-bold text-[#000613] text-lg">
+                          {item?.city_name || "Unknown City"}
+                        </h3>
+                        <p className="text-[#5c606a] text-sm font-medium">
+                          {item?.city_speciality || "Unknown Speciality"}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => openDeleteModal(item._id)}
+                        className="w-fit mt-2 py-2 flex items-center gap-2 text-red-500 hover:text-red-700 transition-colors font-bold uppercase tracking-wider text-xs cursor-pointer group/remove"
+                      >
+                        <Trash2
+                          size={15}
+                          className="group-hover/remove:scale-110 transition-transform"
+                        />
+                        Delete
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => openDeleteModal(item._id)}
-                      className="w-fit mt-2 py-2 flex items-center gap-2 text-red-500 hover:text-red-700 transition-colors font-bold uppercase tracking-wider text-xs cursor-pointer group/remove"
-                    >
-                      <Trash2
-                        size={15}
-                        className="group-hover/remove:scale-110 transition-transform"
-                      />
-                      Delete
-                    </button>
                   </div>
-                </div>
-              ))}
-              )
+                ))
+              )}
             </div>
           </div>
         </div>

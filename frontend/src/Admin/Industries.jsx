@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 
 const Industries = () => {
-  
+
   const queryClient = useQueryClient();
   const builder = imageUrlBuilder(client);
   const [imagePreview, setImagePreview] = useState("");
@@ -225,26 +225,26 @@ const Industries = () => {
 
                   <label
                     htmlFor="cover_image"
-                    className="bg-[#e8f0fe] border-2 border-dashed border-[#b4c6ef] hover:border-[#904d00] transition-colors rounded-lg flex flex-col items-center justify-center gap-3 cursor-pointer group p-6 text-center"
+                    className="bg-[#e8f0fe] border-2 border-dashed border-[#b4c6ef] hover:border-[#904d00] transition-colors rounded-lg flex flex-col items-center justify-center gap-3 cursor-pointer group overflow-hidden h-44"
                   >
-                    <CloudUpload className="w-8 h-8 text-[#001f3f] group-hover:text-[#904d00] transition-colors" />
-                    <p className="font-bold text-[#43474e] text-xs group-hover:text-[#000613] transition-colors">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="font-sans text-[10px] text-[#5c606a] leading-tight">
-                      SVG, PNG, JPG or GIF (max. 800&times;400px)
-                    </p>
-                  </label>
-
-                  {imagePreview && (
-                    <div className="mt-3">
+                    {imagePreview ? (
                       <img
                         src={imagePreview}
                         alt="Industry preview"
-                        className="w-full h-36 object-cover rounded-lg border border-slate-200"
+                        className="w-full h-full object-cover rounded-lg"
                       />
-                    </div>
-                  )}
+                    ) : (
+                      <div className="flex flex-col items-center justify-center gap-3 p-6 text-center">
+                        <CloudUpload className="w-8 h-8 text-[#001f3f] group-hover:text-[#904d00] transition-colors" />
+                        <p className="font-bold text-[#43474e] text-xs group-hover:text-[#000613] transition-colors">
+                          Click to upload or drag and drop
+                        </p>
+                        <p className="font-sans text-[10px] text-[#5c606a] leading-tight">
+                          SVG, PNG, JPG or GIF (max. 800&times;400px)
+                        </p>
+                      </div>
+                    )}
+                  </label>
                   {errors.cover_image && (
                     <span className="text-red-500 text-xs mt-1">
                       {errors.cover_image.message}
@@ -274,13 +274,12 @@ const Industries = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              (fetchIndustryData.length === 0) ? (
-              <div className="col-span-full text-center py-12 text-[#5c606a]">
-                No industries found. Please add a new industry.
-              </div>
+              {fetchIndustryData.length === 0 ? (
+                <div className="col-span-full text-center py-12 text-[#5c606a]">
+                  No industries found. Please add a new industry.
+                </div>
               ) : (
-              {fetchIndustryData.map((item) => {
-                return (
+                fetchIndustryData.map((item) => (
                   <div
                     key={item?._id}
                     className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-[0_4px_20px_rgba(0,31,63,0.05)] hover:shadow-xl transition-all duration-300 relative flex flex-col h-full"
@@ -297,7 +296,7 @@ const Industries = () => {
                     <div
                       className="h-36 w-full bg-cover bg-center relative bg-slate-100"
                       style={{
-                        backgroundImage: `url('${urlFor(item?.industry_image.asset._ref)}')`,
+                        backgroundImage: `url('${urlFor(item?.industry_image)}')`,
                       }}
                     >
                       <div className="absolute inset-0 bg-linear-to-t from-black/75 to-transparent" />
@@ -308,14 +307,12 @@ const Industries = () => {
                         {item?.industry_type || "Unnamed Industry"}
                       </h3>
                       <p className="font-sans text-xs sm:text-sm text-[#43474e] leading-relaxed mb-4 flex-1 line-clamp-2">
-                        {item?.industry_description ||
-                          "No description provided."}
+                        {item?.industry_description || "No description provided."}
                       </p>
                     </div>
                   </div>
-                );
-              })}
-              )
+                ))
+              )}
             </div>
           </div>
         </div>
