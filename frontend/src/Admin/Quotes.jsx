@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 
 const Quotes = () => {
-  
+
   const queryClient = useQueryClient();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedQuoteId, setSelectedQuoteId] = useState(null);
@@ -112,14 +112,12 @@ const Quotes = () => {
                         <p className="text-[#74777f] text-[10px] uppercase font-bold tracking-wider">Pickup</p>
                         <p className="text-[#0b57d0] font-semibold text-sm mt-0.5">{quote?.user_pickup_location || 'N/A'}</p>
                       </div>
-                      {/* Delivery */}
                       <div className="relative">
                         <div className="absolute -left-[27px] top-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#0b57d0] bg-white" />
                         <p className="text-[#74777f] text-[10px] uppercase font-bold tracking-wider">Delivery</p>
                         <p className="text-[#0b57d0] font-semibold text-sm mt-0.5">{quote?.user_delivery_location || 'N/A'}</p>
                       </div>
                     </div>
-                    {/* Date pill */}
                     <div className="mt-5 inline-flex items-center gap-2 text-[#43474e] bg-[#e8f0fe] px-3 py-1.5 rounded-lg text-xs font-semibold">
                       <Calendar size={14} className="text-[#0b57d0]" />
                       Required by: <strong className="text-[#000613]">{quote?.user_required_date || 'N/A'}</strong>

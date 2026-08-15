@@ -1,7 +1,42 @@
-import { useQuery } from '@tanstack/react-query';
 import { Truck, Package, Building2, FileText, Plus, ArrowRight, Mail, ExternalLink, MapPin, PlusSquare, Edit3 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router';
+import { client } from '../sanityClient';
 
 const Dashboard = () => {
+
+  const { data: fetchAdminData } = useQuery({
+    queryKey: ['admin'],
+    queryFn: async () => {
+      const response = await client.fetch(`*[_type == "admin"]`)
+      return response
+    },
+    staleTime: 0,
+    retry: 3,
+    retryDelay: 1500
+  })
+
+  const { data: fetchFleetData } = useQuery({
+    queryKey: ['fleet'],
+    queryFn: async () => {
+      const response = await client.fetch(`*[_type == "fleet"]`)
+      return response
+    },
+    staleTime: 0,
+    retry: 3,
+    retryDelay: 1500
+  })
+
+  const { data: fetchQuotesData } = useQuery({
+    queryKey: ['qoute'],
+    queryFn: async () => {
+      const response = await client.fetch(`*[_type == "quote"]`)
+      return response
+    },
+    staleTime: 0,
+    retry: 3,
+    retryDelay: 1500
+  })
 
   return (
         <main className="p-4 sm:p-8 lg:p-12 space-y-8 lg:space-y-12">
@@ -11,30 +46,27 @@ const Dashboard = () => {
                 Administrator Console
               </span>
               <h1 className="text-[#0d1c2f] font-bold text-2xl sm:text-4xl lg:text-5xl tracking-tight">
-                Welcome Back, Ibrar.
+                Welcome Back, {fetchAdminData[0]?.name}.
               </h1>
             </div>
           </section>
 
-          {/* KPI Cards Grid */}
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {/* KPI 1 */}
             <div className="bg-[#e6eeff] rounded-xl p-6 shadow-sm flex flex-col justify-between min-h-45 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
               <div className="flex justify-between items-start">
                 <div className="bg-[#000613] text-white p-3 rounded-lg shadow-sm">
                   <FileText className="w-6 h-6" />
                 </div>
-                <a href="#" className="text-[#904d00] font-bold text-xs hover:underline flex items-center gap-1 group/link">
+                <Link to={`/admin/quotes`} className="text-[#904d00] font-bold text-xs hover:underline flex items-center gap-1 group/link">
                   Check <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
-                </a>
+                </Link>
               </div>
               <div className="mt-4">
                 <span className="block text-[#43474e] text-sm">Total Quotes Received</span>
-                <span className="block text-[#000613] text-2xl sm:text-3xl font-bold mt-1">1,482</span>
+                <span className="block text-[#000613] text-2xl sm:text-3xl font-bold mt-1">{fetchQuotesData?.length || 0}</span>
               </div>
             </div>
 
-            {/* KPI 2 */}
             <div className="bg-[#e6eeff] rounded-xl p-6 shadow-sm flex flex-col justify-between min-h-45 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
               <div className="flex justify-between items-start">
                 <div className="bg-[#000613] text-white p-3 rounded-lg shadow-sm">
@@ -43,128 +75,61 @@ const Dashboard = () => {
               </div>
               <div className="mt-4">
                 <span className="block text-[#43474e] text-sm">Active Fleet Count</span>
-                <span className="block text-[#000613] text-2xl sm:text-3xl font-bold mt-1">347</span>
+                <span className="block text-[#000613] text-2xl sm:text-3xl font-bold mt-1">{fetchFleetData?.length}</span>
               </div>
             </div>
 
-            {/* KPI 3 */}
-            <div className="bg-[#e6eeff] rounded-xl p-6 shadow-sm flex flex-col justify-between min-h-45 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-              <div className="flex justify-between items-start">
-                <div className="bg-[#000613] text-white p-3 rounded-lg shadow-sm">
-                  <Edit3 className="w-6 h-6" />
-                </div>
-              </div>
-              <div className="mt-4">
-                <span className="block text-[#43474e] text-sm">Published Blogs</span>
-                <span className="block text-[#000613] text-2xl sm:text-3xl font-bold mt-1">86</span>
-              </div>
-            </div>
-
-            {/* KPI 4 */}
-            <div className="bg-[#e6eeff] rounded-xl p-6 shadow-sm flex flex-col justify-between min-h-45 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-              <div className="flex justify-between items-start">
-                <div className="bg-[#000613] text-white p-3 rounded-lg shadow-sm">
-                  <Building2 className="w-6 h-6" />
-                </div>
-              </div>
-              <div className="mt-4">
-                <span className="block text-[#43474e] text-sm">Total Clients</span>
-                <span className="block text-[#000613] text-2xl sm:text-3xl font-bold mt-1">1,204</span>
-              </div>
-            </div>
           </section>
 
-          {/* Main Activity & Quick Actions Split */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Recent Activity Feed */}
             <div className="lg:col-span-2 bg-[#e6eeff] rounded-xl p-6 sm:p-8 shadow-sm">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-[#0d1c2f] text-xl font-bold">Recent Quote Requests</h2>
-                <a href="#" className="text-[#43474e] font-bold text-xs hover:text-[#000613] transition-colors flex items-center gap-1">
+                <Link to={`/admin/quotes`} className="text-[#43474e] font-bold text-xs hover:text-[#000613] transition-colors flex items-center gap-1">
                   View All <ExternalLink className="w-4 h-4" />
-                </a>
+                </Link>
               </div>
 
               <div className="flex flex-col gap-4 relative">
-                {/* Timeline Line */}
                 <div className="absolute left-6 top-3 bottom-3 w-px bg-[#c4c6cf]/40 hidden sm:block" />
 
-                {/* Activity Item 1 */}
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start relative group">
-                  <div className="w-12 h-12 rounded-full bg-white shrink-0 hidden sm:flex items-center justify-center z-10 shadow-sm border border-slate-200 group-hover:border-[#904d00] transition-colors">
-                    <Mail className="w-5 h-5 text-[#904d00]" />
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg p-5 shadow-sm w-full">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                      <div>
-                        <h3 className="text-[#0d1c2f] font-bold text-base">Acme Corp Logistics Need</h3>
-                        <p className="text-[#43474e] text-xs mt-0.5">
-                          Requested by <span className="text-[#000613] font-semibold">Sarah Jenkins</span>
-                        </p>
-                      </div>
-                      <span className="text-[#43474e] text-xs font-bold bg-[#dde9ff] px-3 py-1 rounded-full whitespace-nowrap">
-                        10 mins ago
-                      </span>
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-4 text-xs text-[#43474e]">
-                      <span className="flex items-center gap-1"><MapPin className="w-4 h-4 text-[#904d00]" /> NYC to LDN</span>
-                      <span className="flex items-center gap-1"><Package className="w-4 h-4 text-[#904d00]" /> 12 TEU</span>
-                    </div>
-                  </div>
-                </div>
+                {fetchQuotesData.length > 0 ? (
 
-                {/* Activity Item 2 */}
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start relative group">
-                  <div className="w-12 h-12 rounded-full bg-white shrink-0 hidden sm:flex items-center justify-center z-10 shadow-sm border border-slate-200 group-hover:border-[#904d00] transition-colors">
-                    <Mail className="w-5 h-5 text-[#904d00]" />
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg p-5 shadow-sm w-full">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                      <div>
-                        <h3 className="text-[#0d1c2f] font-bold text-base">Heavy Machinery Transport</h3>
-                        <p className="text-[#43474e] text-xs mt-0.5">
-                          Requested by <span className="text-[#000613] font-semibold">Marcus Vance</span>
-                        </p>
+                  (fetchQuotesData.map((quote) => (
+                  <div key={quote?._id} className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start relative group">
+                    <div className="w-12 h-12 rounded-full bg-white shrink-0 hidden sm:flex items-center justify-center z-10 shadow-sm border border-slate-200 group-hover:border-[#904d00] transition-colors">
+                      <Mail className="w-5 h-5 text-[#904d00]" />
+                    </div>
+                    <div className="flex-1 bg-white rounded-lg p-5 shadow-sm w-full">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <div>
+                          <h3 className="text-[#0d1c2f] font-bold text-base">{quote?.user_company_name || 'N/A'}</h3>
+                          <p className="text-[#43474e] text-xs mt-0.5">
+                            Requested by <span className="text-[#000613] font-semibold">{quote?.user_fullname || 'N/A'}</span>
+                          </p>
+                        </div>
                       </div>
-                      <span className="text-[#43474e] text-xs font-bold bg-[#dde9ff] px-3 py-1 rounded-full whitespace-nowrap">
-                        1 hour ago
-                      </span>
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-4 text-xs text-[#43474e]">
-                      <span className="flex items-center gap-1"><MapPin className="w-4 h-4 text-[#904d00]" /> HAM to DXB</span>
-                      <span className="flex items-center gap-1"><Truck className="w-4 h-4 text-[#904d00]" /> Oversized Load</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Activity Item 3 */}
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start relative group">
-                  <div className="w-12 h-12 rounded-full bg-white shrink-0 hidden sm:flex items-center justify-center z-10 shadow-sm border border-slate-200 group-hover:border-[#904d00] transition-colors">
-                    <Mail className="w-5 h-5 text-[#904d00]" />
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg p-5 shadow-sm w-full">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                      <div>
-                        <h3 className="text-[#0d1c2f] font-bold text-base">Standard Container Freight</h3>
-                        <p className="text-[#43474e] text-xs mt-0.5">
-                          Requested by <span className="text-[#000613] font-semibold">Global Retail Inc.</span>
-                        </p>
+                      <div className="mt-4 flex flex-wrap gap-4 text-xs text-[#43474e]">
+                        <span className="flex items-center gap-1"><MapPin className="w-4 h-4 text-[#904d00]" /> {quote?.user_pickup_location || 'N/A'} to {quote?.user_delivery_location || 'N/A'}</span>
+                        <span className="flex items-center gap-1"><Package className="w-4 h-4 text-[#904d00]" />{quote?.user_estimated_weight || 'N/A'}</span>
                       </div>
-                      <span className="text-[#43474e] text-xs font-bold bg-[#dde9ff] px-3 py-1 rounded-full whitespace-nowrap">
-                        3 hours ago
-                      </span>
                     </div>
                   </div>
-                </div>
+                  )))
+                ): (
+                  <div className="flex flex-col items-center justify-center gap-2 py-12">
+                    <h3 className="text-[#0d1c2f] font-bold text-base">No Recent Requests</h3>
+                    <p className="text-[#43474e] text-sm">There are no recent quote requests at the moment.</p>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Quick Actions Grid */}
             <div className="flex flex-col gap-4">
               <h2 className="text-[#0d1c2f] text-xl font-bold mb-1">Quick Actions</h2>
 
-              <a
-                href="#"
+              <Link
+                to={`/admin/add-fleet`}
                 className="group block bg-[#000613] rounded-xl overflow-hidden shadow-sm relative h-36 p-6 flex-col justify-end"
               >
                 <div
@@ -183,10 +148,10 @@ const Dashboard = () => {
                     <p className="text-white/80 text-xs mt-0.5">Register new vehicles or vessels.</p>
                   </div>
                 </div>
-              </a>
+              </Link>
 
-              <a
-                href="#"
+              <Link
+                to="/admin/add-gallery"
                 className="group block bg-[#e6eeff] rounded-xl overflow-hidden shadow-sm relative h-36 p-6 hover:bg-[#dde9ff] transition-colors"
               >
                 <div className="relative z-20 h-full flex flex-col justify-between">
@@ -200,24 +165,7 @@ const Dashboard = () => {
                     <p className="text-[#43474e] text-xs mt-0.5">Update media assets.</p>
                   </div>
                 </div>
-              </a>
-
-              <a
-                href="#"
-                className="group block bg-[#e6eeff] rounded-xl overflow-hidden shadow-sm relative h-36 p-6 hover:bg-[#dde9ff] transition-colors"
-              >
-                <div className="relative z-20 h-full flex flex-col justify-between">
-                  <div className="w-9 h-9 bg-white border border-slate-200 text-[#000613] rounded-full flex items-center justify-center shadow-sm group-hover:border-[#000613] transition-colors">
-                    <Edit3 className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-[#0d1c2f] font-bold text-lg group-hover:text-[#000613] transition-colors">
-                      Post New Blog
-                    </h3>
-                    <p className="text-[#43474e] text-xs mt-0.5">Draft or publish articles.</p>
-                  </div>
-                </div>
-              </a>
+              </Link>
             </div>
           </section>
         </main>
