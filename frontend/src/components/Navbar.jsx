@@ -1,22 +1,36 @@
-import { useState, useRef, useEffect } from "react";
 import { Menu, LogOut, X, User } from "lucide-react";
-
-// Admin info — swap these out with real auth data later
-const ADMIN_NAME = "Ibrar Khan";
-const ADMIN_EMAIL = "ibrarkhan@gmail.com";
-const ADMIN_ROLE = "System Admin";
-const ADMIN_AVATAR =
-  "https://lh3.googleusercontent.com/aida/AP1WRLt7kVn_kF0yzBqWixc_WjpE9ry9w7Y68WIrwfjpeO-T6L-ewSGqwjtxkuuN5fMQ-ifGSLXU9OBMj96pnWZEpvNDTnJ5NBSsci-NWzTF26zuo91zHia_JgphFAfCSnrXX2YhL6zpoggKyxExUh6JWIW7SNW973u5PEYIxJSOBpVrzVbTc9ITUS-IN00J3s0Fy9gjufHGRUNThEiB7h8gBM2xoXMsOgTGh5qHJa-aWShsZR1iZ6WnVwSAYOzVGaEgYtgLwKrUoBE6EA";
+import { useState, useRef, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
+import { client } from "../sanityClient";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
+
+  const modalRef = useRef(null);
+  const navigate = useNavigate()
+
+  const [adminDetail, setAdminDetail] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const modalRef = useRef(null);
+  const brandLogo = "/BrightLogo.jpg";
+  const adminAvatar = adminDetail?.avatar || brandLogo;
 
-  console.log(sidebarOpen);
-  
+  const { data: fetchAdminData = [] } = useQuery({
+    queryKey: ['admin'],
+    queryFn: async () => {
+      const response = await client.fetch(`*[_type == "admin"]`)
+      return response
+    },
+    staleTime: 0,
+    retry: 3,
+    retryDelay: 1500
+  })
 
-  // Close modal when clicking outside
+  useEffect(() => {
+    setAdminDetail(fetchAdminData[0])
+  }, [fetchAdminData])
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -31,8 +45,10 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setProfileOpen(false);
-    // Add your logout logic here (e.g. clear auth tokens, redirect)
-    alert("Logged out successfully!");
+    toast.success("Logged out successfully");
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
   };
 
   return (
@@ -45,10 +61,15 @@ const Navbar = () => {
           >
             <Menu className="w-6 h-6" />
           </button>
+
+          <img
+            src={brandLogo}
+            alt="Bright Logistics"
+            className="h-10 w-auto object-contain rounded-md"
+          />
         </div>
 
         <div className="flex items-center gap-4 sm:gap-6 relative">
-          {/* Profile trigger */}
           <button
             onClick={() => setProfileOpen((prev) => !prev)}
             className="flex items-center gap-3 pl-4 sm:pl-6 border-l border-[#c4c6cf]/30 cursor-pointer focus:outline-none group"
@@ -56,26 +77,24 @@ const Navbar = () => {
           >
             <div className="text-right hidden sm:block">
               <p className="text-sm font-bold text-[#0d1c2f] group-hover:text-[#904d00] transition-colors">
-                {ADMIN_NAME}
+                {adminDetail?.name || "Admin"}
               </p>
               <p className="text-[10px] uppercase tracking-widest text-[#43474e] font-bold">
-                {ADMIN_ROLE}
+                SYSTEM ADMIN
               </p>
             </div>
             <img
               alt="Profile"
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-[#dde9ff] group-hover:border-[#904d00] transition-colors"
-              src={ADMIN_AVATAR}
+              src={adminAvatar}
             />
           </button>
 
-          {/* Profile Modal dropdown */}
           {profileOpen && (
             <div
               ref={modalRef}
               className="absolute top-14 right-0 w-72 bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,31,63,0.12)] border border-slate-100 overflow-hidden z-50 animate-fade-in"
             >
-              {/* Modal Header */}
               <div className="bg-[#050f1d] p-5 relative">
                 <button
                   onClick={() => setProfileOpen(false)}
@@ -88,20 +107,18 @@ const Navbar = () => {
                   <img
                     alt="Profile"
                     className="w-12 h-12 rounded-full object-cover border-2 border-white/20"
-                    src={ADMIN_AVATAR}
+                    src={adminAvatar}
                   />
                   <div>
-                    <p className="font-bold text-white text-sm">{ADMIN_NAME}</p>
+                    <p className="font-bold text-white text-sm">{adminDetail?.name}</p>
                     <p className="text-[10px] uppercase tracking-widest text-[#904d00] font-bold mt-0.5">
-                      {ADMIN_ROLE}
+                      SYSTEM ADMIN
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Modal Body */}
               <div className="p-4 flex flex-col gap-3">
-                {/* Admin Name Row */}
                 <div className="flex items-center gap-3 bg-[#f8f9ff] rounded-xl px-4 py-3">
                   <div className="w-8 h-8 bg-[#e8f0fe] rounded-full flex items-center justify-center shrink-0">
                     <User className="w-4 h-4 text-[#0b57d0]" />
@@ -110,14 +127,12 @@ const Navbar = () => {
                     <p className="text-[10px] uppercase tracking-wider text-[#74777f] font-bold">
                       Admin Name
                     </p>
-                    <p className="text-sm font-bold text-[#000613]">{ADMIN_NAME}</p>
+                    <p className="text-sm font-bold text-[#000613]">{adminDetail?.name || "No Name"}</p>
                   </div>
                 </div>
 
-                {/* Email Row */}
                 <div className="flex items-center gap-3 bg-[#f8f9ff] rounded-xl px-4 py-3">
                   <div className="w-8 h-8 bg-[#e8f0fe] rounded-full flex items-center justify-center shrink-0">
-                    {/* Gmail G icon */}
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -129,11 +144,10 @@ const Navbar = () => {
                     <p className="text-[10px] uppercase tracking-wider text-[#74777f] font-bold">
                       Email
                     </p>
-                    <p className="text-sm font-semibold text-[#000613] truncate">{ADMIN_EMAIL}</p>
+                    <p className="text-sm font-semibold text-[#000613] truncate">{adminDetail?.email || "No Email"}</p>
                   </div>
                 </div>
 
-                {/* Logout Button */}
                 <button
                   onClick={handleLogout}
                   className="mt-1 w-full bg-[#050f1d] hover:bg-[#0c2444] text-white font-semibold text-sm py-3 rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"

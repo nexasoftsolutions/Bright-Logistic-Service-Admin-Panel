@@ -18,7 +18,7 @@ const Services = () => {
     setValue,
     watch,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit
   } = useForm({
     defaultValues: {
@@ -26,7 +26,8 @@ const Services = () => {
       description: "",
       image: null
     },
-    mode: "onBlur"
+    mode: "onChange",
+    reValidateMode: "onChange"
   })
 
   const [imagePreview, setImagePreview] = useState("");
@@ -169,6 +170,14 @@ const Services = () => {
                       required: {
                         value: true,
                         message: "Title is required"
+                      },
+                      minLength: {
+                        value: 3,
+                        message: "Title must be at least 3 characters"
+                      },
+                      maxLength: {
+                        value: 100,
+                        message: "Title cannot exceed 100 characters"
                       }
                     })}
                     id='title'
@@ -190,6 +199,14 @@ const Services = () => {
                       required: {
                         value: true,
                         message: "Description is required"
+                      },
+                      minLength: {
+                        value: 10,  
+                        message: "Description must be at least 10 characters"
+                      },
+                      maxLength: {
+                        value: 500,
+                        message: "Description cannot exceed 500 characters"
                       }
                     })}
                     id='description'
@@ -242,9 +259,13 @@ const Services = () => {
                   )}
                 </div>
 
-                <button type="submit" className="mt-2 w-full bg-[#050f1d] text-white font-semibold py-4 rounded-lg hover:bg-[#0c2444] transition-colors shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer group/btn">
-                  <span>Publish Service</span>
-                  <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                <button
+                  type="submit"
+                  disabled={!isValid || !imagePreview || postServiceData.isPending}
+                  className="mt-2 w-full bg-[#000613] text-white font-bold py-4 rounded-xl shadow-[0_10px_25px_rgba(0,6,19,0.2)] hover:bg-[#f59e0b] hover:shadow-[0_12px_28px_rgba(245,158,11,0.32)] hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#000613]"
+                >
+                  <UploadCloud className="w-5 h-5" />
+                  <span>{postServiceData.isPending ? "Uploading..." : "Upload Service"}</span>
                 </button>
               </form>
             </div>

@@ -10,11 +10,13 @@ const Gallery = () => {
 
   const queryClient = useQueryClient();
   const builder = imageUrlBuilder(client);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");
-  const [activeCategory, setActiveCategory] = useState("all");
   const [viewMode, setViewMode] = useState("grid");
+  const [imagePreview, setImagePreview] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
   const {
     register,
@@ -136,8 +138,24 @@ const Gallery = () => {
     },
   });
 
-  const handleDelete = (id) => {
-    deleteGallerydata.mutate(id);
+  const openDeleteModal = (id) => {
+    setPendingDeleteId(id);
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setPendingDeleteId(null);
+  };
+
+  const handleDelete = () => {
+    if (!pendingDeleteId) return;
+
+    deleteGallerydata.mutate(pendingDeleteId, {
+      onSuccess: () => {
+        closeDeleteModal();
+      },
+    });
   };
 
   return (
@@ -312,7 +330,7 @@ const Gallery = () => {
                           <Eye className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(item.id)}
+                          onClick={() => openDeleteModal(item.id)}
                           className="bg-white/90 hover:bg-red-500 hover:text-white text-red-500 p-1.5 rounded-full shadow-sm transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -350,7 +368,7 @@ const Gallery = () => {
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => openDeleteModal(item.id)}
                         className="p-2 text-red-400 hover:text-red-600 rounded-lg hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -386,6 +404,38 @@ const Gallery = () => {
                 className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-bold"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deleteModalOpen && (
+        <div className="fixed inset-0 bg-black/40 z-[60] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-100">
+            <h3 className="text-xl font-bold text-[#000613] mb-2">
+              Delete Gallery Image?
+            </h3>
+            <p className="text-sm text-[#43474e] leading-relaxed">
+              Are you sure you want to delete this gallery image? This action cannot be undone.
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={closeDeleteModal}
+                className="px-4 py-2 rounded-lg border border-slate-200 text-[#43474e] hover:bg-slate-50 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleteGallerydata.isPending}
+                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors font-medium disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {deleteGallerydata.isPending ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>

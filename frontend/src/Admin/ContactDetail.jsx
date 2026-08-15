@@ -14,7 +14,7 @@ const ContactDetail = () => {
     register,
     reset,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm({
     defaultValues: {
@@ -24,7 +24,8 @@ const ContactDetail = () => {
       director_name: '',
       director_contact_number: '',
     },
-    mode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
   const [watchHeadquaterLocation, watchMainOfficeNumber, watchWhatsappNumber, watchDirectorName, watchDirectorContactNumber] = watch(["headquater_location", "main_office_number", "whatsapp_number", "director_name", "director_contact_number"])
@@ -219,12 +220,12 @@ const ContactDetail = () => {
                         className="w-full bg-[#e8f0fe] text-[#000613] text-sm font-sans pl-10 pr-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-[#904d00]/30 transition-all border-none placeholder-[#74777f]"
                       />
                     </div>
-                  </div>
-                  {errors.whatsapp_number && (
+                    {errors.whatsapp_number && (
                       <p className="text-red-500 text-xs mt-1">
                         {errors.whatsapp_number.message}
                       </p>
                     )}
+                  </div>
                 </div>
 
                 <div className="h-px bg-slate-100 my-8" />
@@ -307,7 +308,7 @@ const ContactDetail = () => {
                     type="button"
                     disabled={isEditMode}
                     onClick={handleEdit}
-                    className="w-full sm:w-auto bg-[#e8f0fe] hover:bg-[#d1e3fc] text-[#000613] font-semibold text-xs uppercase tracking-wider py-4 px-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer"
+                    className="w-full sm:w-auto bg-[#000613] text-white font-bold text-xs uppercase tracking-wider py-4 px-8 rounded-xl shadow-[0_10px_25px_rgba(0,6,19,0.2)] hover:bg-[#f59e0b] hover:shadow-[0_12px_28px_rgba(245,158,11,0.32)] hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#000613]"
                   >
                     <Pencil
                       size={18}
@@ -317,14 +318,14 @@ const ContactDetail = () => {
                   </button>
                   <button
                     type="submit"
-                    disabled={!isEditMode}
-                    className="w-full sm:w-auto bg-[#050f1d] hover:bg-[#0c2444] text-white font-semibold text-xs uppercase tracking-wider py-4 px-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer"
+                    disabled={!isEditMode || !isValid || updateAdminDetail.isPending}
+                    className="w-full sm:w-auto bg-[#000613] text-white font-bold text-xs uppercase tracking-wider py-4 px-8 rounded-xl shadow-[0_10px_25px_rgba(0,6,19,0.2)] hover:bg-[#f59e0b] hover:shadow-[0_12px_28px_rgba(245,158,11,0.32)] hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#000613]"
                   >
                     <Save
                       size={18}
                       className="group-hover:-translate-y-0.5 transition-transform"
                     />
-                    Update Contact Details
+                    {updateAdminDetail.isPending ? 'Updating...' : 'Update Contact Details'}
                   </button>
                 </div>
               </form>

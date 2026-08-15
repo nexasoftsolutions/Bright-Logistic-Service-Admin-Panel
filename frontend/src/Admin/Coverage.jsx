@@ -14,14 +14,15 @@ const Coverage = () => {
   const {
     register,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit
   } = useForm({
     defaultValues: {
       city: "",
       speciality: ""
     },
-    mode: "onBlur"
+    mode: "onChange",
+    reValidateMode: "onChange"
   })
 
   const { data: fetchCoverageData = [] } = useQuery({
@@ -142,6 +143,14 @@ const Coverage = () => {
                         required: {
                           value: true,
                           message: "city is required"
+                        },
+                        minLength: {
+                          value: 2,
+                          message: "City name must be at least 2 characters"
+                        },
+                        maxLength: {
+                          value: 100,
+                          message: "City name cannot exceed 100 characters"
                         }
                       })}
                       id="city-name"
@@ -151,9 +160,9 @@ const Coverage = () => {
                       className="w-full bg-[#e8f0fe] text-[#000613] font-sans text-sm py-3 pl-10 pr-4 rounded-lg outline-none focus:ring-2 focus:ring-[#904d00]/30 transition-all placeholder-[#74777f]"
                     />
                   </div>
-                  {errors.city &&
-                    <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>
-                  }
+                    {errors.city &&
+                      <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>
+                    }
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -195,13 +204,11 @@ const Coverage = () => {
 
                 <button
                   type="submit"
-                  className="mt-2 w-full bg-[#050f1d] hover:bg-[#0c2444] text-white font-semibold py-4 rounded-lg shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group/btn text-sm"
+                  disabled={!isValid || postAdminData.isPending}
+                  className="mt-2 w-full bg-[#000613] text-white font-bold py-4 rounded-xl shadow-[0_10px_25px_rgba(0,6,19,0.2)] hover:bg-[#f59e0b] hover:shadow-[0_12px_28px_rgba(245,158,11,0.32)] hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#000613]"
                 >
-                  <span>Add Location</span>
-                  <ArrowRight
-                    size={18}
-                    className="group-hover/btn:translate-x-1 transition-transform"
-                  />
+                  <MapPinPlus className="w-5 h-5" />
+                  <span>{postAdminData.isPending ? "Adding..." : "Upload Coverage"}</span>
                 </button>
               </form>
             </div>

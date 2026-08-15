@@ -19,14 +19,15 @@ const Industries = () => {
     setValue,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     defaultValues: {
       industry_type: "",
       description: "",
       cover_image: null,
     },
-    mode: "onBlur",
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
 
   const { data: fetchIndustryData = [] } = useQuery({
@@ -168,13 +169,31 @@ const Industries = () => {
                     Industry Type
                   </label>
                   <input
-                    {...register("industry_type", { required: true })}
+                    {...register("industry_type", { 
+                      required: {
+                        value: true,
+                        message: "Industry type is required",
+                      },
+                      maxLength: {
+                        value: 100,
+                        message: "Industry type cannot exceed 100 characters",
+                      },
+                      minLength: {
+                        value: 2,
+                        message: "Industry type must be at least 2 characters",
+                      },
+                    })}
                     required
                     id="industry-type"
                     className="w-full bg-[#e8f0fe] text-[#000613] font-sans text-sm px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-[#904d00]/30 transition-all placeholder-[#74777f] border-none"
                     placeholder="e.g. Automotive, Pharmaceuticals..."
                     type="text"
                   />
+                  {errors.industry_type && (
+                    <span className="text-red-500 text-xs mt-1">
+                     Industry type is required
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -189,6 +208,14 @@ const Industries = () => {
                       required: {
                         value: true,
                         message: "Description is required",
+                      },
+                      minLength: {
+                        value: 10,  
+                        message: "Description must be at least 10 characters",
+                      },
+                      maxLength: {
+                        value: 500,
+                        message: "Description cannot exceed 500 characters",
                       },
                     })}
                     required
@@ -253,11 +280,12 @@ const Industries = () => {
                 </div>
 
                 <button
-                  className="mt-2 w-full bg-[#050f1d] hover:bg-[#0c2444] text-white font-semibold py-4 rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer text-sm"
                   type="submit"
+                  disabled={!isValid || !imagePreview || postIndustryData.isPending}
+                  className="mt-2 w-full bg-[#000613] text-white font-bold py-4 rounded-xl shadow-[0_10px_25px_rgba(0,6,19,0.2)] hover:bg-[#f59e0b] hover:shadow-[0_12px_28px_rgba(245,158,11,0.32)] hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#000613]"
                 >
-                  <Save className="w-4 h-4" />
-                  <span>Add Industry</span>
+                  <CloudUpload className="w-5 h-5" />
+                  <span>{postIndustryData.isPending ? "Uploading..." : "Upload Industry"}</span>
                 </button>
               </form>
             </div>

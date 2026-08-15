@@ -24,6 +24,12 @@ export const fleetSchema = defineType({
       validation: (Rule) => Rule.required().error('Optimal cargo is required'),
     }),
     defineField({
+      name: 'specification',
+      title: 'Specification',
+      type: 'string',
+      validation: (Rule) => Rule.required().error('Optimal cargo is required'),
+    }),
+    defineField({
       name: 'assest_image',
       title: 'Asset Image',
       type: 'image',
