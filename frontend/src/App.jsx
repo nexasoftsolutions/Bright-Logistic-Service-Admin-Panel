@@ -10,7 +10,6 @@ function App() {
     <>
       <Routes>
         <Route index path='/' element={<Login/>}/>
-        <Route path='/signup' element={<Signup/>}/>
         <Route path='/forget-password' element={<ForgetPassword/>}/>
         <Route path='/admin/*' element={<Layout/>}/>
       </Routes>

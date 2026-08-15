@@ -64,7 +64,7 @@ export default function Login() {
         <div className="mb-6 sm:mb-8 transition-transform hover:scale-105 duration-300">
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-white shadow-md flex items-center justify-center p-3 border border-slate-100">
             <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPU8uM-M8CvUX-Xs03BgmVgkByblX9T52Kt2E9ULyTtTLaLYHrfEU_mnSIVcSZbODXkzfCfCUXEiCEFORRMN2tZ55pddFsvk9HZUDXb0xg82tfOsvcPObklEo-aD_yddoyOt0xU12HaNYlelRcCI6E8fZP6H9eVriRNgLVf1CzY0qcyRps_JI74zjfyOL2p2hf8wdE4DMIx-LfhECtrzvIsH539P1bJ10yAK0H_Am1pV93DsEhtTCCtrQ_Ofl1LZPRDk4"
+              src="/BrightLogo.jpg"
               alt="Bright Logistics Services Logo"
               className="w-full h-full object-contain"
             />
@@ -73,7 +73,7 @@ export default function Login() {
 
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#000613] mb-1.5">
-            Control Tower
+            Bright Logistics Admin Panel
           </h1>
           <p className="text-sm sm:text-base text-[#43474e]">
             Secure Administrator Access
@@ -171,26 +171,6 @@ export default function Login() {
               )}
             </div>
 
-            {/* <div className="flex items-center gap-3 pt-1">
-              <label className="relative flex items-center cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-5 h-5 border-2 border-[#c4c6cf] rounded-md peer-checked:bg-[#001f3f] peer-checked:border-[#001f3f] transition-colors flex items-center justify-center bg-white">
-                  <Check className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity stroke-[3]" />
-                </div>
-              </label>
-              <span
-                onClick={() => setRememberMe((prev) => !prev)}
-                className="text-xs sm:text-sm text-[#43474e] cursor-pointer select-none hover:text-[#0d1c2f] transition-colors"
-              >
-                Keep me securely logged in
-              </span>
-            </div> */}
-
             <button
               type="submit"
               disabled={isSubmitDisabled}
@@ -200,15 +180,6 @@ export default function Login() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
-            <div className="mt-2 text-center text-xs sm:text-sm text-[#43474e]">
-              Don&apos;t have an account?{' '}
-              <Link to={`/signup`}
-                href="#signup"
-                className="text-[#001f3f] font-bold hover:text-[#904d00] hover:underline transition-colors"
-              >
-                Sign Up
-              </Link>
-            </div>
           </form>
 
           <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[#74777f]">

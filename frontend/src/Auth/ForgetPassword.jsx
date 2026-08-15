@@ -158,7 +158,7 @@ export default function ForgetPassword() {
         <div className="relative bg-white rounded-2xl shadow-xl shadow-[#001f3f]/5 p-6 sm:p-10 z-10 overflow-hidden border border-slate-100">
           <div className="flex flex-col items-center mb-6 sm:mb-8 text-center">
             <img
-              src="https://lh3.googleusercontent.com/aida/AP1WRLtwrdP9mryxuxDclP1ANNQjwMyBg6rR1GffuXqC2QBX8Wgn14b7XJ-Ib1qmbsQhx7ZqaRk3uw1dk1SVI11gSm1xhDp73YstDM26cYZymZYcDgVM_dQPz1ngmXj6T87xdD_3PgCBpTkVW9Y68Qo_fG6M8G5n_FtO15PaA6xaZq_znb6iZfjwVGzs6MpZ1JkH2E9pTYCqMk8AmV9DQVYoUVyjH-VLZMrXW0RjTGFfpmjqeLcU9ycE7rUgf1g"
+              src="/BrightLogo.jpg"
               alt="Bright Logistics Logo"
               className="h-10 sm:h-12 w-auto mb-4 sm:mb-6 object-contain"
             />
