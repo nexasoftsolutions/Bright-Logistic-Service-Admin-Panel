@@ -5,6 +5,8 @@ import { client } from '../sanityClient';
 
 const Dashboard = () => {
 
+  const quotes = fetchQuotesData || [];
+
   const { data: fetchAdminData } = useQuery({
     queryKey: ['admin'],
     queryFn: async () => {
@@ -93,9 +95,9 @@ const Dashboard = () => {
               <div className="flex flex-col gap-4 relative">
                 <div className="absolute left-6 top-3 bottom-3 w-px bg-[#c4c6cf]/40 hidden sm:block" />
 
-                {fetchQuotesData.length > 0 ? (
+                {quotes.length > 0 ? (
 
-                  (fetchQuotesData.map((quote) => (
+                  (quotes.map((quote) => (
                   <div key={quote?._id} className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start relative group">
                     <div className="w-12 h-12 rounded-full bg-white shrink-0 hidden sm:flex items-center justify-center z-10 shadow-sm border border-slate-200 group-hover:border-[#904d00] transition-colors">
                       <Mail className="w-5 h-5 text-[#904d00]" />

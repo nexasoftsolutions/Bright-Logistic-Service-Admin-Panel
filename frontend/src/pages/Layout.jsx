@@ -18,14 +18,15 @@ const Layout = () => {
               <Sidebar/>
               <Navbar/>
               <Routes>
-                <Route index path="/dashboard" element={<Dashboard/>}/>
-                <Route path="/add-gallery" element={<Gallery/>}/>
-                <Route path="/add-fleet" element={<Fleet/>}/>
-                <Route path="/add-services" element={<Services/>}/>
-                <Route path="/add-coverage" element={<Coverage/>}/>
-                <Route path="/add-industries" element={<Industries/>}/>
-                <Route path="/quotes" element={<Quotes/>}/>
-                <Route path="/contact-detail" element={<ContactDetail/>}/>
+                <Route index element={<Dashboard/>}/>
+                <Route path="dashboard" element={<Dashboard/>}/>
+                <Route path="add-gallery" element={<Gallery/>}/>
+                <Route path="add-fleet" element={<Fleet/>}/>
+                <Route path="add-services" element={<Services/>}/>
+                <Route path="add-coverage" element={<Coverage/>}/>
+                <Route path="add-industries" element={<Industries/>}/>
+                <Route path="quotes" element={<Quotes/>}/>
+                <Route path="contact-detail" element={<ContactDetail/>}/>
               </Routes>
             </div>
         </div>
