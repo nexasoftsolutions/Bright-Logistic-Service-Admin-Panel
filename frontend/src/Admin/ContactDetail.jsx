@@ -303,7 +303,7 @@ const ContactDetail = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4">
+                <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:justify-end">
                   <button
                     type="button"
                     disabled={isEditMode}

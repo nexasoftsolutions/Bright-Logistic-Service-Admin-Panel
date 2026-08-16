@@ -143,8 +143,8 @@ const Fleet = () => {
 
   return (
     <>
-      <main className="flex-1 bg-[#f8f9ff] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="flex flex-col w-full gap-8 lg:gap-12 max-w-300 mx-auto">
+      <main className="flex-1 bg-[#f8f9ff] px-3 sm:px-6 lg:px-8 py-6 sm:py-12">
+        <div className="flex flex-col w-full gap-6 sm:gap-8 lg:gap-12 max-w-none lg:max-w-300 mx-auto">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-[#000613] tracking-tight mb-1">
@@ -165,8 +165,8 @@ const Fleet = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-12 gap-8 items-start">
-            <div className="col-span-12 lg:col-span-4 lg:sticky lg:top-28 bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,31,63,0.05)] rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+          <div className="grid grid-cols-12 gap-4 sm:gap-8 items-start">
+            <div className="col-span-12 lg:col-span-4 lg:sticky lg:top-28 bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,31,63,0.05)] rounded-2xl p-4 sm:p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full pointer-events-none" />
               <h2 className="mb-6 flex items-center gap-3">
                 <PlusCircle className="w-6 h-6 text-[#904d00] shrink-0" />
