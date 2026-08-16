@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router"
+import { useState } from "react"
 import Navbar from "../components/Navbar"
 import Sidebar from "../components/Sidebar"
 import Dashboard from "../Admin/Dashboard"
@@ -11,12 +12,14 @@ import ContactDetail from "../Admin/ContactDetail"
 import Quotes from "../Admin/Quotes"
 
 const Layout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   return (
     <>
         <div className="min-h-screen bg-[#f8f9ff] font-sans text-[#0d1c2f]">
            <div className="lg:pl-72 transition-all duration-300">
-              <Sidebar/>
-              <Navbar/>
+              <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+              <Navbar onOpenSidebar={() => setSidebarOpen(true)} />
               <Routes>
                 <Route index element={<Dashboard/>}/>
                 <Route path="dashboard" element={<Dashboard/>}/>

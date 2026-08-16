@@ -1,10 +1,7 @@
 import { LayoutDashboard, Image as GalleryIcon, Truck, Package, Globe, Building2, FileText, Contact, X } from "lucide-react";
 import { NavLink } from "react-router";
-import { useState } from "react";
 
-const Sidebar = () => {
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+const Sidebar = ({ isOpen, onClose }) => {
 
   const navigationItems = [
     { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
@@ -16,18 +13,19 @@ const Sidebar = () => {
     { label: "Quotes", icon: FileText, path: "/quotes" },
     { label: "Contact Details", icon: Contact, path: "/contact-detail" },
   ];
+
   return (
     <>
-      {sidebarOpen && (
+      {isOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          onClick={onClose}
         />
       )}
 
       <aside
         className={`fixed left-0 top-0 h-full w-72 bg-white z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)] transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
         <div className="h-20 flex items-center justify-between px-6 sm:px-8 border-b border-[#c4c6cf]/30">
@@ -35,7 +33,7 @@ const Sidebar = () => {
             BRIGHT <span className="text-[#904d00]">LOGISTICS</span>
           </span>
           <button
-            onClick={() => setSidebarOpen(false)}
+            onClick={onClose}
             className="lg:hidden text-[#43474e] hover:text-[#000613]"
           >
             <X className="w-6 h-6" />
@@ -43,12 +41,14 @@ const Sidebar = () => {
         </div>
 
         <nav className="flex-1 px-4 space-y-1 overflow-y-auto py-4">
-          {navigationItems.map((item, idx) => {
+          {navigationItems.map((item) => {
             const Icon = item.icon;
             return (
               <NavLink
-                to={`/admin/${item.path}`}
-                className={({isActive}) => `${isActive? "bg-[#fd8b00] text-white": "text-[#43474e] hover:bg-[#dde9ff] hover:text-[#0d1c2f]" } flex items-center px-4 py-3 rounded-lg text-sm font-semibold transition-all group`}
+                key={item.label}
+                to={`/admin${item.path}`}
+                onClick={onClose}
+                className={({ isActive }) => `${isActive ? "bg-[#fd8b00] text-white" : "text-[#43474e] hover:bg-[#dde9ff] hover:text-[#0d1c2f]" } flex items-center px-4 py-3 rounded-lg text-sm font-semibold transition-all group`}
               >
                 <Icon className="w-5 h-5 mr-3 shrink-0" />
                 <span>{item.label}</span>

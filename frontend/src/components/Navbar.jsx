@@ -5,13 +5,12 @@ import { useNavigate } from "react-router";
 import { client } from "../sanityClient";
 import { toast } from "react-toastify";
 
-const Navbar = () => {
+const Navbar = ({ onOpenSidebar }) => {
 
   const modalRef = useRef(null);
   const navigate = useNavigate()
 
   const [adminDetail, setAdminDetail] = useState(null)
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const brandLogo = "/BrightLogo.jpg";
   const adminAvatar = adminDetail?.avatar || brandLogo;
@@ -56,7 +55,7 @@ const Navbar = () => {
       <header className="sticky top-0 h-20 bg-[#f8f9ff]/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-30 flex items-center justify-between px-4 sm:px-8 lg:px-12">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => setSidebarOpen(true)}
+            onClick={onOpenSidebar}
             className="lg:hidden p-2 text-[#43474e] hover:text-[#000613] focus:outline-none"
           >
             <Menu className="w-6 h-6" />
