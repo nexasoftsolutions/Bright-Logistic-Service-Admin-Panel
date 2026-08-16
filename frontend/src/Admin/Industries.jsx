@@ -134,17 +134,17 @@ const Industries = () => {
   };
 
   return (
-    <main className="flex-1 bg-[#f8f9ff] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <div className="flex flex-col w-full gap-8 lg:gap-12 max-w-75 lg:max-w-7xl mx-auto">
+    <main className="flex-1 bg-[#f8f9ff] px-3 sm:px-5 md:px-6 lg:px-8 py-6 sm:py-10 lg:py-12">
+      <div className="flex flex-col w-full gap-6 md:gap-8 lg:gap-12 max-w-none md:max-w-7xl mx-auto">
         <div className="flex flex-col gap-2 relative z-10 mb-2">
           <h1 className="text-2xl sm:text-3xl font-bold text-[#000613] tracking-tight">
             Industries Management
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full">
-          <div className="lg:col-span-4 flex flex-col gap-6">
-            <div className="bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,31,63,0.05)] rounded-2xl p-6 sm:p-8 relative overflow-hidden group">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 lg:gap-8 items-start w-full">
+          <div className="md:col-span-4 lg:col-span-4 flex flex-col gap-4 md:gap-6">
+            <div className="bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,31,63,0.05)] rounded-2xl p-4 md:p-6 lg:p-8 relative overflow-hidden group">
               <div className="mb-6">
                 <h2 className="flex items-center gap-2 mb-2">
                   <PlusCircle className="w-6 h-6 text-[#904d00] shrink-0" />
@@ -291,7 +291,7 @@ const Industries = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-8 flex flex-col gap-6">
+          <div className="md:col-span-8 lg:col-span-8 flex flex-col gap-4 md:gap-6">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <h2 className="flex items-center gap-2">
                 <Layers className="w-5 h-5 text-[#5c606a] shrink-0" />
@@ -301,7 +301,7 @@ const Industries = () => {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
               {fetchIndustryData.length === 0 ? (
                 <div className="col-span-full text-center py-12 text-[#5c606a]">
                   No industries found. Please add a new industry.
