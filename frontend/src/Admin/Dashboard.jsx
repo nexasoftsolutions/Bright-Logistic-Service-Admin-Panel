@@ -5,9 +5,7 @@ import { client } from '../sanityClient';
 
 const Dashboard = () => {
 
-  const quotes = fetchQuotesData || [];
-
-  const { data: fetchAdminData } = useQuery({
+  const { data: fetchAdminData = [] } = useQuery({
     queryKey: ['admin'],
     queryFn: async () => {
       const response = await client.fetch(`*[_type == "admin"]`)
@@ -18,7 +16,7 @@ const Dashboard = () => {
     retryDelay: 1500
   })
 
-  const { data: fetchFleetData } = useQuery({
+  const { data: fetchFleetData = [] } = useQuery({
     queryKey: ['fleet'],
     queryFn: async () => {
       const response = await client.fetch(`*[_type == "fleet"]`)
@@ -29,7 +27,7 @@ const Dashboard = () => {
     retryDelay: 1500
   })
 
-  const { data: fetchQuotesData } = useQuery({
+  const { data: fetchQuotesData = [] } = useQuery({
     queryKey: ['qoute'],
     queryFn: async () => {
       const response = await client.fetch(`*[_type == "quote"]`)
@@ -40,6 +38,8 @@ const Dashboard = () => {
     retryDelay: 1500
   })
 
+  const quotes = fetchQuotesData || [];
+
   return (
         <main className="p-4 sm:p-8 lg:p-12 space-y-8 lg:space-y-12">
           <section className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 relative z-10">
@@ -48,7 +48,7 @@ const Dashboard = () => {
                 Administrator Console
               </span>
               <h1 className="text-[#0d1c2f] font-bold text-2xl sm:text-4xl lg:text-5xl tracking-tight">
-                Welcome Back, {fetchAdminData[0]?.name}.
+                Welcome Back, {fetchAdminData?.[0]?.name || 'Admin'}.
               </h1>
             </div>
           </section>
