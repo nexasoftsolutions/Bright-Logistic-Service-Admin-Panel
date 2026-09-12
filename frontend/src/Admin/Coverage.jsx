@@ -1,5 +1,5 @@
-import { MapPinPlus, Building, Layers, ArrowRight, Trash2 } from 'lucide-react';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { MapPinPlus, Building, Layers, Trash2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { client } from '../sanityClient';
 import { toast } from 'react-toastify';
@@ -51,7 +51,7 @@ const Coverage = () => {
         speciality: ""
       })
     } catch (error) {
-      toast.error("Failed to add coverage data")
+      toast.error("Failed to add coverage data", error)
     }
   }
 
@@ -63,7 +63,7 @@ const Coverage = () => {
       toast.success("Coverage data added successfully")
       queryClient.invalidateQueries({ queryKey: ['coverage'] })
     },
-    onError: (error) => {
+    onError: () => {
       toast.error("Failed to add coverage data")
     }
   })
@@ -85,7 +85,7 @@ const Coverage = () => {
       deleteCoverage.mutate(selectedCoverageId);
       closeDeleteModal();
     } catch (error) {
-      toast.error("Failed to delete coverage data");
+      toast.error("Failed to delete coverage data", error);
     }
   };
 
@@ -98,7 +98,7 @@ const Coverage = () => {
       queryClient.invalidateQueries({ queryKey: ['coverage'] })
       closeDeleteModal();
     },
-    onError: (error) => {
+    onError: () => {
       toast.error("Failed to delete coverage data")
     }
   })
@@ -120,7 +120,6 @@ const Coverage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full">
           <div className="col-span-1 lg:col-span-5 xl:col-span-4 flex flex-col gap-6">
             <div className="bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,31,63,0.05)] rounded-2xl p-6 sm:p-8 relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-full h-1 bg-[#904d00] transition-opacity" />
               <h2 className="mb-6 flex items-center gap-2.5">
                 <MapPinPlus className="text-[#904d00]" size={22} />
                 <span className="font-bold text-[#000613] text-lg sm:text-xl">Add New Location</span>

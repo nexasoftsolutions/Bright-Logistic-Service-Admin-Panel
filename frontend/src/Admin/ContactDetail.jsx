@@ -83,7 +83,7 @@ const ContactDetail = () => {
         director_contact_number: ''
       });
     } catch (error) {
-      toast.error('Failed to update contact details');
+      toast.error('Failed to update contact details', error);
     }
   };
 
@@ -98,7 +98,7 @@ const ContactDetail = () => {
       toast.success('Contact details updated successfully');
       setIsEditMode(false);
     },
-    onError: (error) => {
+    onError: () => {
       toast.error('Failed to update contact details');
     }
   })

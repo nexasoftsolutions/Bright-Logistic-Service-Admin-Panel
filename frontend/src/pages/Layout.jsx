@@ -1,18 +1,33 @@
-import { Route, Routes } from "react-router"
-import { useState } from "react"
-import Navbar from "../components/Navbar"
+import { Route, Routes, Navigate, useParams } from "react-router"
+import ContactDetail from "../Admin/ContactDetail"
+import Industries from "../Admin/Industries"
 import Sidebar from "../components/Sidebar"
 import Dashboard from "../Admin/Dashboard"
-import Gallery from "../Admin/Gallery"
-import Fleet from "../Admin/Fleet"
+import Navbar from "../components/Navbar"
 import Services from "../Admin/Services"
 import Coverage from "../Admin/Coverage"
-import Industries from "../Admin/Industries"
-import ContactDetail from "../Admin/ContactDetail"
+import Gallery from "../Admin/Gallery"
 import Quotes from "../Admin/Quotes"
+import Fleet from "../Admin/Fleet"
+import { useState } from "react"
+
+const TokenGuard = ({ storedToken, children }) => {
+  const { token } = useParams();
+
+  if (!storedToken || token !== storedToken) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const storedToken = localStorage.getItem("adminAuthToken")
+
+  if (!storedToken) {
+    return <Navigate to="/" replace />
+  }
 
   return (
     <>
@@ -21,15 +36,29 @@ const Layout = () => {
               <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
               <Navbar onOpenSidebar={() => setSidebarOpen(true)} />
               <Routes>
-                <Route index element={<Dashboard/>}/>
-                <Route path="dashboard" element={<Dashboard/>}/>
-                <Route path="add-gallery" element={<Gallery/>}/>
-                <Route path="add-fleet" element={<Fleet/>}/>
-                <Route path="add-services" element={<Services/>}/>
-                <Route path="add-coverage" element={<Coverage/>}/>
-                <Route path="add-industries" element={<Industries/>}/>
-                <Route path="quotes" element={<Quotes/>}/>
-                <Route path="contact-detail" element={<ContactDetail/>}/>
+                <Route index element={<Navigate to={`dashboard/${storedToken}`} replace />} />
+
+                {/* Tokenized Routes */}
+                <Route path="dashboard/:token" element={<TokenGuard storedToken={storedToken}><Dashboard /></TokenGuard>} />
+                <Route path="add-gallery/:token" element={<TokenGuard storedToken={storedToken}><Gallery /></TokenGuard>} />
+                <Route path="add-fleet/:token" element={<TokenGuard storedToken={storedToken}><Fleet /></TokenGuard>} />
+                <Route path="add-services/:token" element={<TokenGuard storedToken={storedToken}><Services /></TokenGuard>} />
+                <Route path="add-coverage/:token" element={<TokenGuard storedToken={storedToken}><Coverage /></TokenGuard>} />
+                <Route path="add-industries/:token" element={<TokenGuard storedToken={storedToken}><Industries /></TokenGuard>} />
+                <Route path="quotes/:token" element={<TokenGuard storedToken={storedToken}><Quotes /></TokenGuard>} />
+                <Route path="contact-detail/:token" element={<TokenGuard storedToken={storedToken}><ContactDetail /></TokenGuard>} />
+
+                {/* Fallbacks if accessed without token */}
+                <Route path="dashboard" element={<Navigate to={`dashboard/${storedToken}`} replace />} />
+                <Route path="add-gallery" element={<Navigate to={`add-gallery/${storedToken}`} replace />} />
+                <Route path="add-fleet" element={<Navigate to={`add-fleet/${storedToken}`} replace />} />
+                <Route path="add-services" element={<Navigate to={`add-services/${storedToken}`} replace />} />
+                <Route path="add-coverage" element={<Navigate to={`add-coverage/${storedToken}`} replace />} />
+                <Route path="add-industries" element={<Navigate to={`add-industries/${storedToken}`} replace />} />
+                <Route path="quotes" element={<Navigate to={`quotes/${storedToken}`} replace />} />
+                <Route path="contact-detail" element={<Navigate to={`contact-detail/${storedToken}`} replace />} />
+
+                <Route path="*" element={<Navigate to={`dashboard/${storedToken}`} replace />} />
               </Routes>
             </div>
         </div>

@@ -1,9 +1,20 @@
-import { Truck, Package, Building2, FileText, Plus, ArrowRight, Mail, ExternalLink, MapPin, PlusSquare, Edit3 } from 'lucide-react';
+import { Truck, Package, FileText, Plus, ArrowRight, Mail, ExternalLink, MapPin, PlusSquare } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router';
 import { client } from '../sanityClient';
+import { Link } from 'react-router';
 
 const Dashboard = () => {
+
+  const adminToken = localStorage.getItem("adminAuthToken") || "";
+  let cachedAdminName = "Admin";
+  try {
+    const cached = localStorage.getItem("adminUser");
+    if (cached) {
+      cachedAdminName = JSON.parse(cached)?.name || "Admin";
+    }
+  } catch {
+    // ignore
+  }
 
   const { data: fetchAdminData = [] } = useQuery({
     queryKey: ['admin'],
@@ -48,7 +59,7 @@ const Dashboard = () => {
                 Administrator Console
               </span>
               <h1 className="text-[#0d1c2f] font-bold text-2xl sm:text-4xl lg:text-5xl tracking-tight">
-                Welcome Back, {fetchAdminData?.[0]?.name || 'Admin'}.
+                Welcome Back, {fetchAdminData?.[0]?.name || cachedAdminName}.
               </h1>
             </div>
           </section>
@@ -59,7 +70,7 @@ const Dashboard = () => {
                 <div className="bg-[#000613] text-white p-3 rounded-lg shadow-sm">
                   <FileText className="w-6 h-6" />
                 </div>
-                <Link to={`/admin/quotes`} className="text-[#904d00] font-bold text-xs hover:underline flex items-center gap-1 group/link">
+                <Link to={adminToken ? `/admin/quotes/${adminToken}` : `/admin/quotes`} className="text-[#904d00] font-bold text-xs hover:underline flex items-center gap-1 group/link">
                   Check <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                 </Link>
               </div>
@@ -87,7 +98,7 @@ const Dashboard = () => {
             <div className="lg:col-span-2 bg-[#e6eeff] rounded-xl p-6 sm:p-8 shadow-sm">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-[#0d1c2f] text-xl font-bold">Recent Quote Requests</h2>
-                <Link to={`/admin/quotes`} className="text-[#43474e] font-bold text-xs hover:text-[#000613] transition-colors flex items-center gap-1">
+                <Link to={adminToken ? `/admin/quotes/${adminToken}` : `/admin/quotes`} className="text-[#43474e] font-bold text-xs hover:text-[#000613] transition-colors flex items-center gap-1">
                   View All <ExternalLink className="w-4 h-4" />
                 </Link>
               </div>
@@ -131,7 +142,7 @@ const Dashboard = () => {
               <h2 className="text-[#0d1c2f] text-xl font-bold mb-1">Quick Actions</h2>
 
               <Link
-                to={`/admin/add-fleet`}
+                to={adminToken ? `/admin/add-fleet/${adminToken}` : `/admin/add-fleet`}
                 className="group block bg-[#000613] rounded-xl overflow-hidden shadow-sm relative h-36 p-6 flex-col justify-end"
               >
                 <div
@@ -153,7 +164,7 @@ const Dashboard = () => {
               </Link>
 
               <Link
-                to="/admin/add-gallery"
+                to={adminToken ? `/admin/add-gallery/${adminToken}` : `/admin/add-gallery`}
                 className="group block bg-[#e6eeff] rounded-xl overflow-hidden shadow-sm relative h-36 p-6 hover:bg-[#dde9ff] transition-colors"
               >
                 <div className="relative z-20 h-full flex flex-col justify-between">

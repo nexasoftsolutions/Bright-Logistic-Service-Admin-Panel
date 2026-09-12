@@ -1,5 +1,5 @@
-import { PlusCircle, CloudUpload, Trash2, Save, Layers, Syringe, Car, Cpu, Shirt } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { PlusCircle, CloudUpload, Trash2, Layers } from "lucide-react";
 import imageUrlBuilder from "@sanity/image-url";
 import { useForm } from "react-hook-form";
 import { client } from "../sanityClient";
@@ -86,8 +86,7 @@ const Industries = () => {
       });
       setImagePreview("");
     } catch (error) {
-      toast.error("Failed to upload image");
-      console.error(error);
+      toast.error("Failed to upload image", error);
     }
   };
 
@@ -100,7 +99,7 @@ const Industries = () => {
       queryClient.invalidateQueries({ queryKey: ["industries"] });
     },
     onError: (error) => {
-      toast.error("Failed to add industry");
+      toast.error("Failed to add industry", error);
     },
   });
 
@@ -315,7 +314,7 @@ const Industries = () => {
                     <button
                       type="button"
                       onClick={() => openDeleteModal(item?._id)}
-                      className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-red-50 text-slate-500 hover:text-red-600 transition-colors z-10 opacity-0 group-hover:opacity-100 shadow-sm flex items-center justify-center cursor-pointer"
+                      className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-red-50 text-slate-500 hover:text-red-600 transition-all duration-200 z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 shadow-sm flex items-center justify-center cursor-pointer"
                       aria-label="Delete Industry"
                     >
                       <Trash2 className="w-4 h-4" />

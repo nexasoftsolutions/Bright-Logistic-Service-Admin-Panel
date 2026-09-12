@@ -3,15 +3,17 @@ import { NavLink } from "react-router";
 
 const Sidebar = ({ isOpen, onClose }) => {
 
+  const adminToken = localStorage.getItem("adminAuthToken") || "";
+
   const navigationItems = [
-    { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-    { label: "Gallery", icon: GalleryIcon, path: "/add-gallery" },
-    { label: "Fleet", icon: Truck, path: "/add-fleet" },
-    { label: "Services", icon: Package, path: "/add-services" },
-    { label: "Coverage", icon: Globe, path: "/add-coverage" },
-    { label: "Industries", icon: Building2, path: "/add-industries" },
-    { label: "Quotes", icon: FileText, path: "/quotes" },
-    { label: "Contact Details", icon: Contact, path: "/contact-detail" },
+    { label: "Dashboard", icon: LayoutDashboard, path: adminToken ? `/dashboard/${adminToken}` : "/dashboard" },
+    { label: "Gallery", icon: GalleryIcon, path: adminToken ? `/add-gallery/${adminToken}` : "/add-gallery" },
+    { label: "Fleet", icon: Truck, path: adminToken ? `/add-fleet/${adminToken}` : "/add-fleet" },
+    { label: "Services", icon: Package, path: adminToken ? `/add-services/${adminToken}` : "/add-services" },
+    { label: "Coverage", icon: Globe, path: adminToken ? `/add-coverage/${adminToken}` : "/add-coverage" },
+    { label: "Industries", icon: Building2, path: adminToken ? `/add-industries/${adminToken}` : "/add-industries" },
+    { label: "Quotes", icon: FileText, path: adminToken ? `/quotes/${adminToken}` : "/quotes" },
+    { label: "Contact Details", icon: Contact, path: adminToken ? `/contact-detail/${adminToken}` : "/contact-detail" },
   ];
 
   return (

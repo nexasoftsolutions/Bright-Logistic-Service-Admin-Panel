@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { PlusCircle, UploadCloud, Save, Trash2, Truck } from 'lucide-react';
+import { PlusCircle, UploadCloud, Trash2, Truck } from 'lucide-react';
 import imageUrlBuilder from '@sanity/image-url';
 import { useForm } from 'react-hook-form';
 import { client } from '../sanityClient';
@@ -89,8 +89,7 @@ const Fleet = () => {
       });
       setImagePreview("");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to register asset");
+      toast.error("Failed to register asset", error);
     }
   }
 

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { client } from '../sanityClient';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Login() {
 
@@ -42,12 +42,35 @@ export default function Login() {
     retryDelay: 1500
   })
 
-  const authenticateAdmin = () => {
+  const generateRandomToken = () => {
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let token = "";
+    if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+      const array = new Uint8Array(12);
+      crypto.getRandomValues(array);
+      for (let i = 0; i < array.length; i++) {
+        token += chars[array[i] % chars.length];
+      }
+      return token;
+    }
+    return Math.random().toString(36).substring(2, 14);
+  };
 
-    const admin = adminDetail.find(admin => admin.email === getEmail && admin.password === getPassword);
+  useEffect(() => {
+    const existingToken = localStorage.getItem("adminAuthToken");
+    if (existingToken) {
+      navigate(`/admin/dashboard/${existingToken}`, { replace: true });
+    }
+  }, [navigate]);
+
+  const authenticateAdmin = () => {
+    const admin = adminDetail.find((admin) => admin.email === getEmail && admin.password === getPassword);
     if(admin) {
-      navigate('/admin/dashboard');
+      const randomString = generateRandomToken();
+      localStorage.setItem("adminAuthToken", randomString);
+      localStorage.setItem("adminUser", JSON.stringify(admin));
       toast.success('Authentication successful! Redirecting to dashboard...');
+      navigate(`/admin/dashboard/${randomString}`);
     } else {
       toast.error('Invalid email or password. Please try again.');
     }

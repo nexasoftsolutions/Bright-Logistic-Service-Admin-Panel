@@ -1,5 +1,5 @@
-import { Mail, Phone, Clock, Trash2, Route, Calendar, Layers, Send, CheckCircle2 } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Mail, Phone, Trash2, Route, Calendar, Layers } from 'lucide-react';
 import { client } from '../sanityClient';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
@@ -43,7 +43,7 @@ const Quotes = () => {
       queryClient.invalidateQueries({ queryKey: ['quotes'] });
       closeDeleteModal();
     },
-    onError: (error) => {
+    onError: () => {
       toast.error('Failed to delete quote');
     }
   })
@@ -108,12 +108,12 @@ const Quotes = () => {
                     </h4>
                     <div className="relative pl-6 border-l-2 border-[#d2e3fc] space-y-5">
                       <div className="relative">
-                        <div className="absolute -left-[27px] top-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#0b57d0] bg-white" />
+                        <div className="absolute -left-6.75 top-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#0b57d0] bg-white" />
                         <p className="text-[#74777f] text-[10px] uppercase font-bold tracking-wider">Pickup</p>
                         <p className="text-[#0b57d0] font-semibold text-sm mt-0.5">{quote?.user_pickup_location || 'N/A'}</p>
                       </div>
                       <div className="relative">
-                        <div className="absolute -left-[27px] top-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#0b57d0] bg-white" />
+                        <div className="absolute -left-6.75 top-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#0b57d0] bg-white" />
                         <p className="text-[#74777f] text-[10px] uppercase font-bold tracking-wider">Delivery</p>
                         <p className="text-[#0b57d0] font-semibold text-sm mt-0.5">{quote?.user_delivery_location || 'N/A'}</p>
                       </div>

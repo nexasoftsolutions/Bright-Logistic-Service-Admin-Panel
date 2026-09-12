@@ -27,8 +27,19 @@ const Navbar = ({ onOpenSidebar }) => {
   })
 
   useEffect(() => {
-    setAdminDetail(fetchAdminData[0])
-  }, [fetchAdminData])
+    try {
+      const cached = localStorage.getItem("adminUser");
+      if (cached) {
+        setAdminDetail(JSON.parse(cached));
+        return;
+      }
+    } catch {
+      // fallback
+    }
+    if (fetchAdminData && fetchAdminData.length > 0) {
+      setAdminDetail(fetchAdminData[0]);
+    }
+  }, [fetchAdminData]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -44,6 +55,8 @@ const Navbar = ({ onOpenSidebar }) => {
 
   const handleLogout = () => {
     setProfileOpen(false);
+    localStorage.removeItem("adminAuthToken");
+    localStorage.removeItem("adminUser");
     toast.success("Logged out successfully");
     setTimeout(() => {
       navigate("/");

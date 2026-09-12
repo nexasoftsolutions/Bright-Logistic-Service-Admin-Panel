@@ -1,5 +1,5 @@
+import { UploadCloud, ChevronDown, ImagePlus, Upload, Grid, List, Trash2, X, Eye } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LayoutDashboard, Images, Truck, Package, Globe, Building2, FileText, Contact, Search, Bell, UploadCloud, ChevronDown, ImagePlus, Upload, Grid, List, Trash2, Menu, X, Eye, CheckCircle2 } from 'lucide-react';
 import imageUrlBuilder from '@sanity/image-url'
 import { useForm } from 'react-hook-form';
 import { client } from '../sanityClient';
@@ -120,8 +120,7 @@ const Gallery = () => {
       setSelectedFile(null);
       setImagePreview("");
     } catch (error) {
-      console.error(error);
-      toast.error("Image upload failed");
+      toast.error("Image upload failed", error);
     }
   };
 

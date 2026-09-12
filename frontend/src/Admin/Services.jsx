@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { PlusCircle, Package, UploadCloud, ArrowRight, Trash2 } from 'lucide-react';
+import { PlusCircle, Package, UploadCloud, Trash2 } from 'lucide-react';
 import imageUrlBuilder from '@sanity/image-url'
 import { useForm } from 'react-hook-form';
 import { client } from '../sanityClient';
@@ -89,7 +89,7 @@ const Services = () => {
       });
       setImagePreview('');
     } catch (error) {
-      toast.error('Failed to upload image');
+      toast.error('Failed to upload image', error);
     }
   }
 
